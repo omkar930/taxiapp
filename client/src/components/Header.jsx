@@ -15,8 +15,8 @@ export const Header = () => {
               Cabs
             </li>
           </Link>
-          <Link to='/sign-in'>
-            <li className=' text-slate-700 hover:underline'> Sign in</li>
+          <Link to='/bookings'>
+            <li className=' text-slate-700 hover:underline'> Bookings</li>
           </Link>
 
         </ul>

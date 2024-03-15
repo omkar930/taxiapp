@@ -34,6 +34,7 @@ const LocationComponent = () => {
       if (response.ok) {
         const data = await response.json();
         setTravelTimes(data);
+        console.log(data);
       } else {
         throw new Error("Failed to fetch travel times");
       }
@@ -163,13 +164,27 @@ const LocationComponent = () => {
       </div>
 
       <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Travel Times</h2>
-        <ul className="list-disc pl-8">
-          {travelTimes.map((travelTime) => (
-            <li key={travelTime._id}>{travelTime.origin_id.name} to {travelTime.destination_id.name}: {travelTime.travel_time} minutes</li>
-          ))}
-        </ul>
-      </div>
+  <h2 className="text-2xl font-bold mb-4">Travel Times</h2>
+  <ul className="list-disc pl-8">
+    {travelTimes.map((travelTime) => {
+      // Find the origin location
+      const originLocation = locations.find(location => location._id === travelTime.origin_id);
+      // Find the destination location
+      const destinationLocation = locations.find(location => location._id === travelTime.destination_id);
+      
+      return (
+        <li key={travelTime._id}>
+          {originLocation && destinationLocation && (
+            <>
+              {originLocation.name} to {destinationLocation.name}: {travelTime.travel_time} minutes
+            </>
+          )}
+        </li>
+      );
+    })}
+  </ul>
+</div>
+
     </div>
   );
 };
