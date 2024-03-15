@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const LocationComponent = () => {
+const Location = () => {
   const [locations, setLocations] = useState([]);
   const [travelTimes, setTravelTimes] = useState([]);
   const [newLocation, setNewLocation] = useState("");
@@ -34,7 +34,6 @@ const LocationComponent = () => {
       if (response.ok) {
         const data = await response.json();
         setTravelTimes(data);
-        console.log(data);
       } else {
         throw new Error("Failed to fetch travel times");
       }
@@ -45,7 +44,7 @@ const LocationComponent = () => {
 
   const handleAddLocation = async () => {
     try {
-      const response = await fetch("/api/location/add", {
+      const response = await fetch("/api/location/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,9 +63,25 @@ const LocationComponent = () => {
     }
   };
 
+  const handleDeleteLocation = async (locationId) => {
+    try {
+      const response = await fetch(`/api/location/delete?id=${locationId}`, {
+        method: "GET",
+      });
+      if (response.ok) {
+        fetchLocations();
+        fetchTravelTimes();
+      } else {
+        throw new Error("Failed to delete location");
+      }
+    } catch (error) {
+      console.error("Error deleting location:", error);
+    }
+  };
+
   const handleAddTravelTime = async () => {
     try {
-      const response = await fetch("/api/travel-time/add", {
+      const response = await fetch("/api/travelt/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,6 +98,35 @@ const LocationComponent = () => {
       }
     } catch (error) {
       console.error("Error adding travel time:", error);
+    }
+  };
+
+  const handleDeleteTravelTime = async (travelTimeId) => {
+    try {
+      const response = await fetch(`/api/travelt/delete?id=${travelTimeId}`, {
+        method: "GET",
+      });
+      if (response.ok) {
+        fetchTravelTimes();
+      } else {
+        throw new Error("Failed to delete travel time");
+      }
+    } catch (error) {
+      console.error("Error deleting travel time:", error);
+    }
+  };
+  const handleRefreshRoutes = async () => {
+    try {
+      const response = await fetch("/api/graph/update", {
+        method: "GET",
+      });
+      if (response.ok) {
+        fetchTravelTimes();
+      } else {
+        throw new Error("Failed to refresh routes");
+      }
+    } catch (error) {
+      console.error("Error refreshing routes:", error);
     }
   };
 
@@ -108,7 +152,7 @@ const LocationComponent = () => {
           />
           <button
             onClick={handleAddLocation}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md mr-2"
           >
             Add Location
           </button>
@@ -146,7 +190,7 @@ const LocationComponent = () => {
           />
           <button
             onClick={handleAddTravelTime}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md mr-2"
           >
             Add Travel Time
           </button>
@@ -158,35 +202,54 @@ const LocationComponent = () => {
         <h2 className="text-2xl font-bold mb-4">Locations</h2>
         <ul className="list-disc pl-8">
           {locations.map((location) => (
-            <li key={location._id}>{location.name}</li>
+            <li key={location._id}>
+              {location.name}
+              <button
+                onClick={() => handleDeleteLocation(location._id)}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md ml-2"
+              >
+                Delete
+              </button>
+            </li>
           ))}
         </ul>
       </div>
 
       <div className="mt-8">
-  <h2 className="text-2xl font-bold mb-4">Travel Times</h2>
-  <ul className="list-disc pl-8">
-    {travelTimes.map((travelTime) => {
-      // Find the origin location
-      const originLocation = locations.find(location => location._id === travelTime.origin_id);
-      // Find the destination location
-      const destinationLocation = locations.find(location => location._id === travelTime.destination_id);
-      
-      return (
-        <li key={travelTime._id}>
-          {originLocation && destinationLocation && (
-            <>
-              {originLocation.name} to {destinationLocation.name}: {travelTime.travel_time} minutes
-            </>
-          )}
-        </li>
-      );
-    })}
-  </ul>
-</div>
+        <h2 className="text-2xl font-bold mb-4">Travel Times</h2>
+        <ul className="list-disc pl-8">
+          {travelTimes.map((travelTime) => {
+            // Find the origin location
+            const originLocation = locations.find(location => location._id === travelTime.origin_id);
+            // Find the destination location
+            const destinationLocation = locations.find(location => location._id === travelTime.destination_id);
 
+            return (
+              <li key={travelTime._id}>
+                {originLocation && destinationLocation && (
+                  <>
+                    {originLocation.name} to {destinationLocation.name}: {travelTime.travel_time} minutes
+                    <button
+                      onClick={() => handleDeleteTravelTime(travelTime._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-md ml-2"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <button
+        onClick={handleRefreshRoutes}
+        className="fixed bottom-4 right-4 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md shadow-md"
+      >
+        Refresh Routes
+      </button>
     </div>
   );
 };
 
-export default LocationComponent;
+export default Location

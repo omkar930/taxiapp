@@ -16,3 +16,13 @@ export const getCabs = async (req,res,next)=>{
         next(error);
     }
 }
+export const deleteCab = async (req,res,next)=>{
+    try{
+        console.log(req.query.id);
+        const cab = await Cab.deleteOne({_id: req.query.id});
+        return res.status(200).json(cab);
+    }catch(error){
+        next(error);
+    }
+
+}

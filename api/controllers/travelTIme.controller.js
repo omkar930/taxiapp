@@ -18,3 +18,13 @@ export const getTravelTimes = async (req,res,next) => {
         next(error);
     }
 }
+
+export const deleteTravelTime = async(req,res,next)=>{
+    try{
+        console.log(req.query.id);
+        const travelTime = await TravelTime.deleteOne({_id: req.query.id });
+        return res.status(200).json(travelTime);
+    }catch(error){
+        next(error);
+    }
+}
