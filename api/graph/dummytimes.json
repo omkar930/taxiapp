@@ -1,0 +1,6 @@
+{"_id":{"$oid":"65f4225d287cc29512d1445e"},"location_id":"A","name":"A","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"65f4226c287cc29512d14460"},"location_id":"B","name":"B","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"65f42274287cc29512d14462"},"location_id":"C","name":"C","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"65f4227b287cc29512d14464"},"location_id":"D","name":"D","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"65f42287287cc29512d14466"},"location_id":"E","name":"E","__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"65f4228f287cc29512d14468"},"location_id":"F","name":"F","__v":{"$numberInt":"0"}}
